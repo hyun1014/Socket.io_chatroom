@@ -9,31 +9,33 @@
     <body>
         <h2>Select chat room</h2>
         <select id="room_select">
-            <option value="room_0">Room 0</option>
-            <option value="room_1">Room 1</option>
+            <option value="0">Room 0</option>
+            <option value="1">Room 1</option>
+            <option value="2">Room 2</option>
+            <option value="3">Room 3</option>
+            <option value="4">Room 4</option>
         </select>
         <form action='/' method='POST'>
             <input type='text' id='send_msg'>
             <input type='submit' value='Send'>
         </form>
         <ul id="chat_log"></ul>
-        Test
         <script src='/socket.io/socket.io.js'></script>
         <script src='http://code.jquery.com/jquery-1.11.1.js'></script>
         <script>
             $(function(){
                 const usr_name = prompt("Input your name.");
-                var cnt = 0;
+                var room_num = 0;
                 var socket = io();
-                socket.emit('joinRoom', usr_name, cnt); // 최초 join
-                $('#room_select').change(() => {
-                    socket.emit('leaveRoom', usr_name, cnt); //callback function 있어도 되고 없어도 되고
-                    cnt++;
-                    cnt = cnt % 2; // 대화방 싹 지울수는 없나
-                    socket.emit('joinRoom', usr_name, cnt);
+                socket.emit('joinRoom', usr_name, room_num); // 최초 join
+                $('#room_select').change(() => { // chat room 변경
+                    socket.emit('leaveRoom', usr_name, room_num); //callback function 있어도 되고 없어도 되고
+                    room_num = $('#room_select').val();
+                    $('#chat_log').empty();
+                    socket.emit('joinRoom', usr_name, room_num);
                 });
-                $('form').submit(() => {
-                    socket.emit('chat message', $('#send_msg').val(), usr_name, cnt);
+                $('form').submit(() => { // message 전송
+                    socket.emit('chat message', $('#send_msg').val(), usr_name, room_num);
                     $('#send_msg').val('');
                     return false;
                 });
@@ -45,7 +47,7 @@
                     console.log('join');
                     $('#chat_log').append($('<li>').text('User ' + name + ' has joined room ' + num));
                 });
-                socket.on('chat message', (msg, name, num) => {
+                socket.on('chat message', (msg, name, num) => { // leave, join이랑 다르게 msg 값이 필요
                     console.log('chat');
                     $('#chat_log').append($('<li>').text("User (" + name + "): " + msg));
                 });
