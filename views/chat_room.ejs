@@ -19,7 +19,13 @@
             <input type='text' id='send_msg'>
             <input type='submit' value='Send'>
         </form>
-        <ul id="chat_log"></ul>
+        <div width="700px" style="float:left; margin: 0px 50px 0px 0px">
+            <ul id="chat_log"></ul>
+        </div>
+        <div width="700px" style="float:right; margin: 0px 50px 0px 0px">
+            <h3 id="room_number"></h3>
+            <ul id="chat_member"></ul>
+        </div>
         <script src='/socket.io/socket.io.js'></script>
         <script src='http://code.jquery.com/jquery-1.11.1.js'></script>
         <script>
@@ -28,24 +34,34 @@
                 var room_num = 0;
                 var socket = io();
                 socket.emit('joinRoom', usr_name, room_num); // 최초 join
+                document.getElementById('room_number').innerHTML = "Room " + room_num;
                 $('#room_select').change(() => { // chat room 변경
                     socket.emit('leaveRoom', usr_name, room_num); //callback function 있어도 되고 없어도 되고
                     room_num = $('#room_select').val();
                     $('#chat_log').empty();
                     socket.emit('joinRoom', usr_name, room_num);
+                    document.getElementById('room_number').innerHTML = "Room " + room_num;
                 });
                 $('form').submit(() => { // message 전송
                     socket.emit('chat message', $('#send_msg').val(), usr_name, room_num);
                     $('#send_msg').val('');
                     return false;
                 });
-                socket.on('leaveRoom', (name, num) => {
+                socket.on('leaveRoom', (name, num, memberList) => {
                     console.log('leave');
                     $('#chat_log').append($('<li>').text('User ' + name + ' has left room ' + num));
+                    $('#chat_member').empty(); // room member 갱신
+                    for(var i=0 ; i<memberList.length ; i++){
+                        $('#chat_member').append($('<li>').text(memberList[i]));
+                    }
                 });
-                socket.on('joinRoom', (name, num) => {
+                socket.on('joinRoom', (name, num, memberList) => {
                     console.log('join');
                     $('#chat_log').append($('<li>').text('User ' + name + ' has joined room ' + num));
+                    $('#chat_member').empty(); // room member 갱신
+                    for(var i=0 ; i<memberList.length ; i++){
+                        $('#chat_member').append($('<li>').text(memberList[i]));
+                    }
                 });
                 socket.on('chat message', (msg, name, num) => { // leave, join이랑 다르게 msg 값이 필요
                     console.log('chat');
