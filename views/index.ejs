@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+            Index
+        </title>
+    </head>
+    <body>
+        Socket test page
+        <form action='/' method='POST'>
+            <input type='text' id='m'>
+            <input type='submit'>
+        </form>
+        <div>
+            <ul id='messages'>
+            </ul>
+        </div>
+        <button onclick="namespace(0)">Conn to ns0</button>
+        <button onclick="namespace(1)">Conn to ns1</button>
+        <script src="socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+          $(function () {
+            var socket = io();
+            $('form').submit(function(e) {
+              e.preventDefault(); // prevents page reloading 이거 안해놓으면 submit 할때마다 새로고침 됨
+              socket.emit('chat message', $('#m').val());
+              $('#m').val('');
+              return false;
+            });
+            socket.on('chat message', function(msg){
+                $('#messages').append($('<li>').text("You sent message: " + msg));
+            });
+          });
+          function namespace(nsnum){
+              const namespace_conn = io('/namespace' + nsnum);
+              namespace_conn.on('news', (data) => {
+                  console.log(data.hello);
+              });
+          }
+        </script>
+    </body>
+</html>
