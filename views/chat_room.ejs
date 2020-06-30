@@ -18,6 +18,7 @@
         <form action='/' method='POST'>
             <input type='text' id='send_msg'>
             <input type='submit' value='Send'>
+            <button id="discon">Disconnect</button>
         </form>
         <div width="700px" style="float:left; margin: 0px 50px 0px 0px">
             <ul id="chat_log"></ul>
@@ -46,6 +47,13 @@
                     socket.emit('chat message', $('#send_msg').val(), usr_name, room_num);
                     $('#send_msg').val('');
                     return false;
+                });
+                $('#discon').click(() => {
+                    socket.emit('leaveRoom', usr_name, room_num);
+                    $('#chat_log').empty();
+                    $('#chat_member').empty();
+                    document.getElementById('room_number').innerHTML = 'Bye';
+                    socket.disconnect();
                 });
                 socket.on('leaveRoom', (name, num, memberList) => {
                     console.log('leave');

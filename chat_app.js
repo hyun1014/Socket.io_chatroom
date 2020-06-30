@@ -11,8 +11,8 @@ const io = require('socket.io')(http); */ //줄이면 이렇게 됨
 
 app.set('view engine', 'ejs');
 
-var rooms = ['room_0', 'room_1', 'room_2', 'room_3', 'room_4'];
-var room_members = [[],[],[],[],[]];
+var rooms = ['room_0', 'room_1', 'room_2', 'room_3', 'room_4']; //채팅방 목록
+var room_members = [[],[],[],[],[]]; // 채팅방 별 참가자 list
 
 app.get('/', (req, res) => {
     res.render('chat_room.ejs');
