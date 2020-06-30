@@ -7,7 +7,7 @@
         </title>
     </head>
     <body onunload="discon()">
-        <h2>Select chat room</h2>
+        <h2 id='your_id'>Your nickname: </h2>
         <select id="room_select">
             <option value="0">Room 0</option>
             <option value="1">Room 1</option>
@@ -21,7 +21,7 @@
             <button id="discon">Disconnect</button>
         </form>
         <div width="700px" style="float:left; margin: 0px 50px 0px 0px">
-            <ul id="chat_log"></ul>
+            <ul id="chat_log" style="list-style: none;"></ul>
         </div>
         <div width="700px" style="float:right; margin: 0px 50px 0px 0px">
             <h3 id="room_number"></h3>
@@ -31,6 +31,7 @@
         <script src='http://code.jquery.com/jquery-1.11.1.js'></script>
         <script>
             const usr_name = prompt("Input your name.");
+            document.getElementById('your_id').innerHTML += usr_name;
             var room_num = 0;
             var socket = io();
             socket.emit('joinRoom', usr_name, room_num); // 최초 join
@@ -72,7 +73,13 @@
             });
             socket.on('chat message', (msg, name, num) => { // leave, join이랑 다르게 msg 값이 필요
                 console.log('chat');
-                $('#chat_log').append($('<li>').text("User (" + name + "): " + msg));
+                if(name==usr_name){
+                    console.log("my msg");
+                    $('#chat_log').append($('<li style="text-align:right;">').text(name + ": " + msg));
+                }
+                else{
+                    $('#chat_log').append($('<li style="text-align:left;">').text(name + ": " + msg));
+                }
             });
             function discon() {
                 socket.emit('leaveRoom', usr_name, room_num);
