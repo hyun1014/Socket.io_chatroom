@@ -48,7 +48,7 @@
                 $('#send_msg').val('');
                 return false;
             });
-            $('#discon').click(() => {
+            $('#discon').click(() => { //socket 연결 끊기(disconnection)
                 socket.emit('leaveRoom', usr_name, room_num);
                 $('#chat_log').empty();
                 $('#chat_member').empty();
@@ -81,7 +81,7 @@
                     $('#chat_log').append($('<li style="text-align:left;">').text(name + ": " + msg));
                 }
             });
-            function discon() {
+            function discon() { //창이나 탭이 닫히면 socket 연결 끊기
                 socket.emit('leaveRoom', usr_name, room_num);
                 socket.disconnect();
             }   
