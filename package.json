@@ -1,0 +1,25 @@
+{
+  "name": "socketio_test",
+  "version": "1.0.0",
+  "description": "test for socket.io",
+  "main": "app.js",
+  "dependencies": {
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyun1014/Socket.io_chatroom.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hyun1014/Socket.io_chatroom/issues"
+  },
+  "homepage": "https://github.com/hyun1014/Socket.io_chatroom#readme"
+}
